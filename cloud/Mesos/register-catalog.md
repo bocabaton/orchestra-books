@@ -74,12 +74,17 @@ url = '${URL}/catalog/portfolios'
 display('List Portfolios')
 show(makeGet(url, header))
 
-display('Create Portfolio')
-body = {'name':'Cloud', 'description':'Cloud IaaS Solution, OpenStack, CloudStack, and Docker',
-        'owner':'choonho.son'}
-portfolio = makePost(url, header, body)
-show(portfolio)
-p_id = portfolio['portfolio_id']
+yn = raw_input("Create Portfolio(y/n)? ")
+if yn == "y":
+	display('Create Portfolio')
+	body = {'name':'Cloud', 'description':'Cloud IaaS Solution, OpenStack, CloudStack, and Docker',
+		'owner':'choonho.son'}
+	portfolio = makePost(url, header, body)
+	show(portfolio)
+	p_id = portfolio['portfolio_id']
+else:
+    p_id = raw_input("Portfolio ID: ")
+
 url = '${URL}/catalog/portfolios/%s' % p_id
 
 ######################################
@@ -90,9 +95,9 @@ display('List Product')
 show(makeGet(product_url, header))
 
 display('Create Product')
-body = {'portfolio_id':p_id, 'name':'Docker Swarm', 'short_description':'Docker Swarm cluster',
-        'description':'Docker Swarm cluster', 'provided_by':'BocaBaton',
-        'vendor':'Docker, Inc'}
+body = {'portfolio_id':p_id, 'name':'Mesos Cluster', 'short_description':'Apache Mesos cluster',
+        'description':'Apache Mesos cluster', 'provided_by':'BocaBaton',
+        'vendor':'Apache'}
 product = makePost(product_url, header, body)
 show(product)
 product_id = product['product_id']
@@ -103,14 +108,14 @@ product_url2 = '${URL}/catalog/products/%s' % product_id
 ######################################
 detail_url = '${URL}/catalog/products/%s/detail' % product_id
 display('Create Product detail')
-body = {'email':'choonho.son@gmail.com', 'support_link':'${REPO}/cloud/Docker-Swarm','support_description':'This is builded by Orchestra'}
+body = {'email':'choonho.son@gmail.com', 'support_link':'${REPO}/cloud/Mesos','support_description':'This is builded by Orchestra'}
 show(makePost(detail_url, header, body))
 
 ######################################
 # Package
 ######################################
 package_url = '${URL}/catalog/packages'
-body = {'product_id':product_id, 'pkg_type':'bpmn', 'template':'${REPO}/cloud/Docker-Swarm/docker-swarm.bpmn', 'version':'0.1', 'description':'https://raw.githubusercontent.com/bocabaton/orchestra-books/master/cloud/Docker-Swarm/README.md'}
+body = {'product_id':product_id, 'pkg_type':'bpmn', 'template':'${REPO}/cloud/Mesos/workflow.bpmn', 'version':'Ubuntu 14.04', 'description':'https://raw.githubusercontent.com/bocabaton/orchestra-books/master/cloud/Mesos/README.md'}
 display('Create Package')
 package = makePost(package_url, header, body)
 package_id = package['package_id']
@@ -121,7 +126,7 @@ show(package)
 ######################################
 display('Register Workflow')
 workflow_url = '${URL}/catalog/workflows'
-body = {'template':'${REPO}/cloud/Docker-Swarm/docker-swarm.bpmn', 'template_type':'bpmn'}
+body = {'template':'${REPO}/cloud/Mesos/workflow.bpmn', 'template_type':'bpmn'}
 workflow = makePost(workflow_url, header, body)
 workflow_id = workflow['workflow_id']
 show(workflow)
@@ -131,14 +136,14 @@ show(workflow)
 ######################################
 display('Map Task #1')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Create EC2 Instances', 'task_type':'jeju', 'task_uri':'${REPO}/cloud/Docker-Swarm/provisioning.md'}}
+body = {'map': {'name':'Create Instances', 'task_type':'jeju', 'task_uri':'${REPO}/cloud/Mesos/provisioning.md'}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
 
 display('Map Task #2')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Install Jeju tools', 'task_type':'ssh+all', 'task_uri':"sudo yum install -y python-pip python-devel gcc;sudo pip install jeju --upgrade"}}
+body = {'map': {'name':'Install Prerequisites', 'task_type':'ssh+master01,master02,master03,slave_nodes', 'task_uri':"sudo apt-get update;sudo apt-get install -y python-pip python-dev expect gcc; sudo pip install jeju --upgrade"}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
@@ -146,37 +151,30 @@ show(task)
 
 display('Map Task #3')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Install Docker Engine', 'task_type':'jeju+all', 'task_uri':"${REPO}/cloud/Docker-Swarm/docker-engine.md"}}
+body = {'map': {'name':'Configure Master01', 'task_type':'jeju+master01', 'task_uri':"${REPO}/cloud/Mesos/mesos-master1.md"}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
 
 display('Map Task #4')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Set up a discovery backend', 'task_type':'ssh+mgmt01', 'task_uri':'docker run -d -p 8500:8500 --name=consul progrium/consul -server -bootstrap'}}
+body = {'map': {'name':'Configure Master02', 'task_type':'jeju+master02', 'task_uri':"${REPO}/cloud/Mesos/mesos-master2.md"}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
 
 display('Map Task #5')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Create Swarm primary manager', 'task_type':'jeju+mgmt01', 'task_uri':'${REPO}/cloud/Docker-Swarm/primary-manager.md'}}
+body = {'map': {'name':'Configure Master03', 'task_type':'jeju+master03', 'task_uri':"${REPO}/cloud/Mesos/mesos-master3.md"}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
+
 
 display('Map Task #6')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Create Swarm secondary manager', 'task_type':'jeju+mgmt02', 'task_uri':'${REPO}/cloud/Docker-Swarm/secondary-manager.md'}}
+body = {'map': {'name':'Configure Slaves', 'task_type':'jeju+slave_nodes', 'task_uri':'${REPO}/cloud/Mesos/mesos-slave.md'}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
-
-display('Map Task #7')
-task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Connect Swarm nodes', 'task_type':'jeju+swarm_nodes', 'task_uri':'${REPO}/cloud/Docker-Swarm/swarm-node.md'}}
-task = makePost(task_url, header, body)
-task_id = task['task_id']
-show(task)
-
 ~~~
