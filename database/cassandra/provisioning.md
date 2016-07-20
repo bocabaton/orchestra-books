@@ -69,7 +69,7 @@ for i in range(${NUM_NODES}):
     addr = getServerDetail(server['server_id'],'private_ip_address')
     addresses.append(addr['private_ip_address'])
 
-body = {'add':{'cluster_nodes':cluster}}
+body = {'add':{'cluster':cluster}}
 addEnv('${METADATA}', body)
 
 seed_ip = ""
