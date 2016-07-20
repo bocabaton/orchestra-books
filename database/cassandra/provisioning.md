@@ -15,6 +15,7 @@ IMAGE_ID   | a601aa10-100a-11e6-9eb1-2bbb19e1e3e6 | Ubuntu 14.04 Container at Jo
 FLAVOR_ID   | g4-general-4G     | 1 vcpu, 4G memory
 KEY_NAME   | my-key-name     | Keyname for access
 PROJECT | myproject           | Project Name
+STACK_ID    | xxxxxx            | Stack ID is automatically overrided by system
 
 # Create Server
 
@@ -56,6 +57,7 @@ for i in range(${NUM_NODES}):
     req = {'zone_id': '${ZONE_ID}',
             'name':node_name,
             'key_name':'${KEY_NAME}',
+            'stack_id':'${STACK_ID}',
             'floatingIP':False,
             'request':{
                 'name': node_name,
