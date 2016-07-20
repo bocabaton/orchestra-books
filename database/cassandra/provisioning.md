@@ -18,7 +18,7 @@ PROJECT | myproject           | Project Name
 
 # Create Server
 
-~~python
+~~~python
 import requests
 import json
 
@@ -77,5 +77,5 @@ for addr in addresses:
     seed_ip = seed_ip + addr + ","
 body = {'add':{'jeju':{'SEEDS':seed_ip[:-1]}}}
 addEnv('${METADATA}', body)
-~~
+~~~
 

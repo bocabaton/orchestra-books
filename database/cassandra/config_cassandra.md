@@ -10,7 +10,7 @@ SEEDS   | 192.168.1.1,192.168.1.2   | IP addresses of seed nodes (with , separat
 
 We assumes that Java is already installed
 
-~~bash
+~~~bash
 java -version
 echo "If java is not installed"
 echo "jeju -m oracle-java.md"
@@ -21,7 +21,7 @@ do
     sleep 1
 done
 
-~~
+~~~
 
 # Install Cassandra
 
@@ -34,7 +34,7 @@ Download and l the Public Signing Key:
 To avoid package signature warnings during package updates, we needs to add three public keys from the Apache Software Foundation associat4ed with package repositoryes.
 
 
-~~bash
+~~~bash
 echo "deb http://www.apache.org/dist/cassandra/debian ${VER} main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
 gpg --keyserver pgp.mit.edu --recv-keys F758CE318D77295D
 gpg --export --armor F758CE318D77295D | apt-key add -
@@ -42,20 +42,20 @@ gpg --export --armor F758CE318D77295D | apt-key add -
 gpg --keyserver pgp.mit.edu --recv-keys 2B5C1B00
 gpg --export --armor 2B5C1B00 | sudo apt-key add -
 
-~~
+~~~
 
 ## Install Cassandra
 
-~~bash
+~~~bash
 apt-get update
 apt-get install -y --force-yes cassandra
-~~
+~~~
 
 # Update Configuration
 
 edit /etc/cassandra/cassandra.yaml
 
-~~yaml
+~~~yaml
 cluster_name: '${CLUSTER_NAME}'
 
 seed_provider:
@@ -68,13 +68,13 @@ listen_address: ${IP}
 rpc_address: ${IP}
 
 endpoint_snitch: GossipingPropertyFileSnitch
-~~
+~~~
 
 # Restart Cassandra service
 
 
-~~bash
+~~~bash
 service cassandra restart
 nodetool status
-~~
+~~~
 
