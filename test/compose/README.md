@@ -6,7 +6,7 @@ This is an example code for docker compose deployment
 
 We execute docker-compose.yml file
 
-~~yml
+~~~yml
 # test
 test-node:
   image: postgres
@@ -15,4 +15,4 @@ test-node:
   ports:
     - 8000
 
-~~
+~~~
