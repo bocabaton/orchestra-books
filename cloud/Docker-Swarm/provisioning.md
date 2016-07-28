@@ -47,6 +47,28 @@ def addEnv(url, body):
     if r.status_code == 200:
         result = json.loads(r.text)
 
+def getRegionID(zone_id):
+    url = '${URL}/provisioning/zones/${ZONE_ID}'
+    try:
+        r = requests.get(url, headers=hdr)
+        if (r.status_code == 200):
+            result = json.loads(r.text)
+            return r.region_id
+    except requests.exception.ConnectionError:
+        print "Failed to connect"
+
+
+def createZone(region_id, name, platform):
+    url = '${URL}/provisioning/zones'
+    try:
+        req = {'name':name, 'region_id':region_id, 'zone_type':platform}
+        r =  requests.post(url, headers=hdr, data=json.dumps(req))
+        if r.status_code == 200:
+            result = json.loads(r.text)
+            return result
+    except requests.exception.ConnectionError:
+        print "Failed to connect"
+
 # Node name
 mgmt01 = []
 mgmt02 = []
@@ -126,5 +148,10 @@ addEnv('${METADATA}', body)
 
 body = {'add':{'all':all}}
 addEnv('${METADATA}', body)
+
+# Register Docker-Swarm Zone
+# Get Region ID
+region_id = getRegionID('${ZONE_ID}')
+createZone(region_id, 'docker-swarm', 'docker')
 
 ~~~
