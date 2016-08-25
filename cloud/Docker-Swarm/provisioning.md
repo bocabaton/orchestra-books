@@ -7,11 +7,12 @@ URL     | http://127.0.0.1/api/v1 | URL for request
 TOKEN   | my_token              | Token for API (must be overrided)
 METADATA      | http://127.0.0.1/api/v1/catalog/{stack_id}/env | Environment URL for stack
 ZONE_ID | 14b14664-705e-42e9-8106-240b83f9df79  | Zone ID (must be overrided)
-AMI_ID   | ami-d0f506b0 | Amazon Linux AMI 2016.03.1 (HVM), SSD Volume Type (us-west-2)
+AMI_ID   | ami-7172b611 | Amazon Linux AMI 2016.03.3 (HVM), SSD Volume Type (us-west-2)
 SWARM_NODES   | 2       | Number of Docker swarm nodes
 KEY_NAME   | aws_son    | Keypair name
 MGMT_INSTANCE_TYPE | t2.small   | Instance type of Management node
 SWARM_INSTANCE_TYPE | t2.medium  | Instance type of Swarm node
+STACK_ID    | xxxxxx            | Stack ID is automatically overrided by system
 
 # Create Server
 
@@ -19,6 +20,10 @@ SWARM_INSTANCE_TYPE | t2.medium  | Instance type of Swarm node
 import requests
 import json
 import time
+
+# convert Jeju keyword to python variable
+
+ZONE_ID = '${ZONE_ID}'
 
 hdr = {'Content-Type':'application/json','X-Auth-Token':'${TOKEN}'}
 def createServer(req):
@@ -69,6 +74,19 @@ def createZone(region_id, name, platform):
     except requests.exception.ConnectionError:
         print "Failed to connect"
 
+def createZoneDetail(zone_id, docker_url):
+    dic = {'create':[{'key':'DOCKER_HOST','value':docker_url}]}
+    url = '${URL}/provisioning/zones/%s' % zone_id
+     try:
+        r =  requests.post(url, headers=hdr, data=json.dumps(dic))
+        if r.status_code == 200:
+            result = json.loads(r.text)
+            return result
+    except requests.exception.ConnectionError:
+        print "Failed to connect"
+   
+
+
 # Node name
 mgmt01 = []
 mgmt02 = []
@@ -87,6 +105,7 @@ boto_request = {'ImageId':'${AMI_ID}',
 req = {'zone_id': '${ZONE_ID}',
         'name': 'mgmt01',
         'key_name': '${KEY_NAME}',
+        'stack_id':'${STACK_ID}',
         'floatingIP':True,
         'request':boto_request}
 
@@ -103,12 +122,14 @@ time.sleep(30)
 addr = getServerDetail(server['server_id'],'private_ip_address')
 body = {'add':{'jeju':{'MGMT01':addr['private_ip_address']}}}
 addEnv('${METADATA}', body)
+mgmt01_ip = getServerDtail(server['server_id'],'floatingip')
 
 # Create Mgmt02
 print "Create mgmt02"
 req = {'zone_id': '${ZONE_ID}',
         'name': 'mgmt02',
         'key_name': '${KEY_NAME}',
+        'stack_id':'${STACK_ID}',
         'floatingIP':True,
         'request':boto_request}
 
@@ -135,6 +156,7 @@ for i in range(${SWARM_NODES}):
     req = {'zone_id': '${ZONE_ID}', 
             'name':node_name,
             'key_name':'${KEY_NAME}',
+            'stack_id':'${STACK_ID}',
             'floatingIP':True,
             'request': boto_request
         }
@@ -154,4 +176,7 @@ addEnv('${METADATA}', body)
 region_id = getRegionID('${ZONE_ID}')
 createZone(region_id, 'docker-swarm', 'docker')
 
+# Register Docker API
+docker_url = 'tcp://%s:4000' % mgmt01_ip
+createZoneDetail(docker_url, ZONE_ID)
 ~~~

@@ -138,7 +138,7 @@ show(task)
 
 display('Map Task #2')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Install Jeju tools', 'task_type':'ssh+all', 'task_uri':"sudo yum install -y python-pip python-devel gcc;sudo pip install jeju --upgrade"}}
+body = {'map': {'name':'Install Jeju tools', 'task_type':'ssh@all', 'task_uri':"sudo yum install -y python-pip python-devel gcc;sudo pip install jeju --upgrade"}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
@@ -146,35 +146,35 @@ show(task)
 
 display('Map Task #3')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Install Docker Engine', 'task_type':'jeju+all', 'task_uri':"${REPO}/cloud/Docker-Swarm/docker-engine.md"}}
+body = {'map': {'name':'Install Docker Engine', 'task_type':'jeju@all', 'task_uri':"${REPO}/cloud/Docker-Swarm/docker-engine.md"}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
 
 display('Map Task #4')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Set up a discovery backend', 'task_type':'ssh+mgmt01', 'task_uri':'docker run -d -p 8500:8500 --name=consul progrium/consul -server -bootstrap'}}
+body = {'map': {'name':'Set up a discovery backend', 'task_type':'ssh@mgmt01', 'task_uri':'docker run -d -p 8500:8500 --name=consul progrium/consul -server -bootstrap'}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
 
 display('Map Task #5')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Create Swarm primary manager', 'task_type':'jeju+mgmt01', 'task_uri':'${REPO}/cloud/Docker-Swarm/primary-manager.md'}}
+body = {'map': {'name':'Create Swarm primary manager', 'task_type':'jeju@mgmt01', 'task_uri':'${REPO}/cloud/Docker-Swarm/primary-manager.md'}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
 
 display('Map Task #6')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Create Swarm secondary manager', 'task_type':'jeju+mgmt02', 'task_uri':'${REPO}/cloud/Docker-Swarm/secondary-manager.md'}}
+body = {'map': {'name':'Create Swarm secondary manager', 'task_type':'jeju@mgmt02', 'task_uri':'${REPO}/cloud/Docker-Swarm/secondary-manager.md'}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
 
 display('Map Task #7')
 task_url = '${URL}/catalog/workflows/%s/tasks' % workflow_id
-body = {'map': {'name':'Connect Swarm nodes', 'task_type':'jeju+swarm_nodes', 'task_uri':'${REPO}/cloud/Docker-Swarm/swarm-node.md'}}
+body = {'map': {'name':'Connect Swarm nodes', 'task_type':'jeju@swarm_nodes', 'task_uri':'${REPO}/cloud/Docker-Swarm/swarm-node.md'}}
 task = makePost(task_url, header, body)
 task_id = task['task_id']
 show(task)
