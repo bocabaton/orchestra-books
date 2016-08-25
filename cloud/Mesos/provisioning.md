@@ -12,6 +12,7 @@ SLAVE_NODES   | 2       | Number of Docker swarm nodes
 KEY_NAME   | aws_son    | Keypair name
 MGMT_INSTANCE_TYPE | t2.small   | Instance type of Management node
 SWARM_INSTANCE_TYPE | t2.medium  | Instance type of Swarm node
+STACK_ID    | xxxxxx            | Stack ID is automatically overrided by system
 
 # Create Server
 
@@ -19,6 +20,8 @@ SWARM_INSTANCE_TYPE | t2.medium  | Instance type of Swarm node
 import requests
 import json
 import time
+
+ZONE_ID = '${ZONE_ID}'
 
 hdr = {'Content-Type':'application/json','X-Auth-Token':'${TOKEN}'}
 def createServer(req):
@@ -46,6 +49,40 @@ def addEnv(url, body):
     r = requests.post(url, headers=hdr, data=json.dumps(body))
     if r.status_code == 200:
         result = json.loads(r.text)
+
+def createZone(region_id, name, platform):
+    url = '${URL}/provisioning/zones'
+    try:
+        req = {'name':name, 'region_id':region_id, 'zone_type':platform}
+        r =  requests.post(url, headers=hdr, data=json.dumps(req))
+        if r.status_code == 200:
+            result = json.loads(r.text)
+            return result
+    except requests.exception.ConnectionError:
+        print "Failed to connect"
+
+def createZoneDetail(zone_id, docker_url):
+    dic = {'create':[{'key':'DOCKER_HOST','value':docker_url}]}
+    url = '${URL}/provisioning/zones/%s' % zone_id
+     try:
+        r =  requests.post(url, headers=hdr, data=json.dumps(dic))
+        if r.status_code == 200:
+            result = json.loads(r.text)
+            return result
+    except requests.exception.ConnectionError:
+        print "Failed to connect"
+   
+def getRegionID(zone_id):
+    url = '${URL}/provisioning/zones/%s' % zone_id
+    try:
+        r = requests.get(url, headers=hdr)
+        if (r.status_code == 200):
+            result = json.loads(r.text)
+            return r.region_id
+    except requests.exception.ConnectionError:
+        print "Failed to connect"
+
+
 
 # Node name
 master01 = []
@@ -167,5 +204,10 @@ for i in range(${SLAVE_NODES}):
 
 body = {'add':{'slave_nodes':slave_nodes}}
 addEnv('${METADATA}', body)
+
+# Register Mesos Zone
+# Get Region ID
+region_id = getRegionID(ZONE_ID)
+createZone(region_id, 'mesos-cluster', 'mesos')
 
 ~~~
