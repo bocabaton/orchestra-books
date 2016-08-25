@@ -6,6 +6,10 @@ Keyword | Value         | Description
 ----    | ----          | ----
 URL     | http://127.0.0.1/api/v1   | Orchestra API enpoint
 REPO    | https://raw.githubusercontent.com/bocabaton/orchestra-books/master   | Repository if Orchestra books
+USER_ID | admin                     | User ID
+PASSWORD| password                  | Password
+
+
 
 ## Portfolio
 
@@ -63,29 +67,27 @@ def makeDelete(url, header):
 
 display('Auth')
 url = '${URL}/token/get'
-user_id='admin'
-password='password'
+user_id='${USER_ID}'
+password='${PASSWORD}'
 body = {'user_id':user_id, 'password':password}
 token = makePost(url, header, body)
 token_id = token['token']
 header.update({'X-Auth-Token':token_id})
 
-url = '${URL}/catalog/portfolios'
+url = '${URL}/catalog/portfolios?name=Cloud'
 display('List Portfolios')
-show(makeGet(url, header))
-
-yn = raw_input("Create Portfolio(y/n)? ")
-if yn == "y":
-	display('Create Portfolio')
-	body = {'name':'Cloud', 'description':'Cloud IaaS Solution, OpenStack, CloudStack, and Docker',
-		'owner':'choonho.son'}
-	portfolio = makePost(url, header, body)
-	show(portfolio)
-	p_id = portfolio['portfolio_id']
+p1 = makeGet(url, header)
+show(p1)
+if p1['total_count'] > 0:
+    p_id = p1['output'][0]['portfolio_id']
 else:
-    p_id = raw_input("Portfolio ID: ")
+    display('Create Portfolio')
+    body = {'name':'Cloud', 'description':'Cloud IaaS Solution, OpenStack, CloudStack, and Docker',
+      'owner':'choonho.son'}
+    portfolio = makePost(url, header, body)
+    show(portfolio)
+    p_id = portfolio['portfolio_id']
 
-url = '${URL}/catalog/portfolios/%s' % p_id
 
 ######################################
 # Product
