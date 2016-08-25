@@ -178,5 +178,5 @@ createZone(region_id, 'docker-swarm', 'docker')
 
 # Register Docker API
 docker_url = 'tcp://%s:4000' % mgmt01_ip
-createZoneDetail(docker_url, ZONE_ID)
+createZoneDetail(ZONE_ID, docker_url)
 ~~~
