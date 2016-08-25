@@ -77,7 +77,7 @@ def createZone(region_id, name, platform):
 def createZoneDetail(zone_id, docker_url):
     dic = {'create':[{'key':'DOCKER_HOST','value':docker_url}]}
     url = '${URL}/provisioning/zones/%s' % zone_id
-     try:
+    try:
         r =  requests.post(url, headers=hdr, data=json.dumps(dic))
         if r.status_code == 200:
             result = json.loads(r.text)
