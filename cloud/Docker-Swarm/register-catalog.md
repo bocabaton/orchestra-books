@@ -78,7 +78,7 @@ display('List Portfolios')
 p1 = makeGet(url, header)
 show(p1)
 if p1['total_count'] > 0:
-    p_id = p1['output'][0]['portfolio_id']
+    p_id = p1['results'][0]['portfolio_id']
 else:
     display('Create Portfolio')
     body = {'name':'Cloud', 'description':'Cloud IaaS Solution, OpenStack, CloudStack, and Docker',
