@@ -122,7 +122,7 @@ time.sleep(30)
 addr = getServerDetail(server['server_id'],'private_ip_address')
 body = {'add':{'jeju':{'MGMT01':addr['private_ip_address']}}}
 addEnv('${METADATA}', body)
-mgmt01_ip = getServerDtail(server['server_id'],'floatingip')
+mgmt01_ip = getServerDetail(server['server_id'],'floatingip')
 
 # Create Mgmt02
 print "Create mgmt02"
