@@ -181,11 +181,12 @@ addEnv('${METADATA}', body)
 # Register Docker-Swarm Zone
 # Get Region ID
 region_id = getRegionID('${ZONE_ID}')
-createZone(region_id, 'docker-swarm', 'docker')
+docker_zone = createZone(region_id, 'docker-swarm', 'docker')
+print docker_zone
 
 # Register Docker API
 docker_url = 'tcp://%s:4000' % mgmt01_ip
-createZoneDetail(ZONE_ID, docker_url)
+createZoneDetail(docker_zone['zone_id'], docker_url)
 
 # Update stack endpoint
 stack_url = '${URL}/catalog/stacks/%s/endpoint' % STACK_ID
