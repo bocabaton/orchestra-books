@@ -10,8 +10,8 @@ METADATA      | http://127.0.0.1/api/v1/catalog/{stack_id}/env | Environment URL
 ZONE_ID | 14b14664-705e-42e9-8106-240b83f9df79  | Zone ID (must be overrided)
 KEY_NAME   | aws_son    | Keypair name
 STACK_ID    | xxxxxx            | Stack ID is automatically overrided by system
-NAME    | gitlab              | name of gitlab container
-IMAGE   | gitlab/gitlab-ce:latest    | Gitlab docker image
+NAME    | jenkins             | name of jenkins container
+IMAGE   | jenkins             | Jekins docker image
 
 ## Portfolio
 
@@ -83,7 +83,7 @@ request = {
     "detach":True,
     "tty":True,
     "image":IMAGE,
-    "ports":[80],
+    "ports":[8080,50000],
 }
 body = {'name':NAME, 'zone_id': ZONE_ID, 'key_name':KEY_NAME, 'floatingIP':False, 'stack_id':STACK_ID, 'request':request}
 server = makePost(server_url, header2, body)
