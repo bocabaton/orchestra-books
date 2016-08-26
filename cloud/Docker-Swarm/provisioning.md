@@ -24,8 +24,17 @@ import time
 # convert Jeju keyword to python variable
 
 ZONE_ID = '${ZONE_ID}'
+STACK_ID = '${STACK_ID}'
 
 hdr = {'Content-Type':'application/json','X-Auth-Token':'${TOKEN}'}
+
+def makePost(url, header, body):
+    r = requests.post(url, headers=header, data=json.dumps(body))
+    if r.status_code == 200:
+        return json.loads(r.text)
+    print r.text
+    raise NameError(url)
+
 def createServer(req):
     url = '${URL}/provisioning/servers'
     try:
@@ -176,4 +185,10 @@ createZone(region_id, 'docker-swarm', 'docker')
 # Register Docker API
 docker_url = 'tcp://%s:4000' % mgmt01_ip
 createZoneDetail(ZONE_ID, docker_url)
+
+# Update stack endpoint
+stack_url = '${URL}/catalog/stacks/%s/endpoint' % STACK_ID
+body = {'add':{'DOCKER_HOST':docker_url}}
+makePost(stack_url, hdr, body)
+
 ~~~
