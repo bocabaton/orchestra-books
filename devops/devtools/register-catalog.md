@@ -1,4 +1,4 @@
-# Create DockerSwarm Catalog
+# Create DevOps Dev Tool Catalog
 
 ## Environment
 
@@ -126,7 +126,7 @@ show(package)
 ######################################
 display('Register Workflow')
 workflow_url = '${URL}/catalog/workflows'
-body = {'template':'${REPO}/cloud/Docker-Swarm/docker-swarm.bpmn', 'template_type':'bpmn'}
+body = {'template':'${REPO}/devops/devtools/workflow.bpmn', 'template_type':'bpmn'}
 workflow = makePost(workflow_url, header, body)
 workflow_id = workflow['workflow_id']
 show(workflow)

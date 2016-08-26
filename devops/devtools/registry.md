@@ -86,9 +86,8 @@ request = {
     "ports":[500],
 }
 body = {'name':NAME, 'zone_id': ZONE_ID, 'key_name':KEY_NAME, 'floatingIP':False, 'stack_id':STACK_ID, 'request':request}
-server = makePost(server_url, header2, body)
+server = makePost(server_url, header, body)
 show(server)
-server_id = server['server_id']
 
 ~~~
 
