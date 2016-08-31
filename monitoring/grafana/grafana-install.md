@@ -4,7 +4,7 @@
 
 Keyword     | Value             | Description
 ----        | ----              | ----
-VER         | grafana_3.0.4-1464167696_amd64.deb  | Stable .deb for Debian-based Linux
+VER         | grafana_3.0.4-1464167696.deb  | Stable .deb for Debian-based Linux
 
 Last update 2016-06-03
 
@@ -24,3 +24,4 @@ Start Grafana
 ~~~bash
 service grafana-server start
 ~~~
+
