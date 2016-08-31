@@ -8,6 +8,7 @@ SERVER      | 127.0.0.1             | Remote DB like Influx DB
 PORT        | 8086                  | Influx DB UDP Port
 PKG         | telegraf_0.13.1_amd64.deb | Telegraf package
 REPO        | https://dl.influxdata.com/telegraf/releases | Telegraf download url
+DATABASE    | mydatabase            | name of Influxdb Database
 
 # Install Telegraf
 
@@ -103,7 +104,7 @@ edit /etc/telegraf/telegraf.conf
   # urls = ["udp://localhost:8089"] # UDP endpoint example
   urls = ["http://${SERVER}:${PORT}"] # required
   ## The target database for metrics (telegraf will create it if not exists).
-  database = "telegraf" # required
+  database = "${DATABASE}" # required
   ## Precision of writes, valid values are "ns", "us" (or "µs"), "ms", "s", "m", "h".
   ## note: using "s" precision greatly improves InfluxDB compression.
   precision = "s"
