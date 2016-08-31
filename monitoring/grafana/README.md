@@ -19,6 +19,7 @@ The deployment has following process.
 Keyword | Value | Description
 ----    | ----  | ----
 KEY_NAME   | server    | Keypair name
+DATABASE   | mydatabase    | name of monitoring database
 
 
 # Reference
