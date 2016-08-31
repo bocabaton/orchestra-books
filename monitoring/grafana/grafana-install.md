@@ -22,6 +22,7 @@ dpkg -i ${VER}
 Start Grafana
 
 ~~~bash
+service grafana-server stop
 service grafana-server start
 ~~~
 
