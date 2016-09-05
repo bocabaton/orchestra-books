@@ -2,18 +2,18 @@
 
 # High level architecture
 
-<img src="https://raw.githubusercontent.com/pyengine/orchestra-books/master/devops/devtools/architecture.png">
+<img src="https://raw.githubusercontent.com/bocabaton/orchestra-books/master/devops/devtools/architecture.png">
 
 # Deployment Architecture
 We are going to deploy container at Docker cluster.
 
-<img src="https://raw.githubusercontent.com/pyengine/orchestra-books/master/devops/devtools/deployment.png">
+<img src="https://raw.githubusercontent.com/bocabaton/orchestra-books/master/devops/devtools/deployment.png">
 
 # Workflow Process
 
 The deployment of docker swarm cluster has following process.
 
-<img src="https://raw.githubusercontent.com/pyengine/orchestra-books/master/devops/devtools/workflow.png">
+<img src="https://raw.githubusercontent.com/bocabaton/orchestra-books/master/devops/devtools/workflow.png">
 
 # Default Environment
 

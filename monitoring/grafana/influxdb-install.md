@@ -23,5 +23,13 @@ apt-get update
 apt-get install -y --force-yes influxdb
 ~~~
 
+# Start InfluxDB
+
+~~~bash
+service influxdb stop
+service influxdb start
+~~~
+
+
 * Reference
 https://docs.influxdata.com/
